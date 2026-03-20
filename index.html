@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PNLE Tracker">
+<meta name="theme-color" content="#0d0d0d">
+<title>PNLE 2026 Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0d0d;
+  --bg2: #141414;
+  --bg3: #1c1c1c;
+  --bg4: #242424;
+  --surface: #181818;
+  --border: #272727;
+  --border2: #333;
+  --red: #e01c3a;
+  --red-dim: #5a0d17;
+  --red-glow: rgba(224,28,58,0.13);
+  --gold: #d4902a;
+  --text: #f0ece6;
+  --text2: #a09890;
+  --text3: #555;
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,0.07);
+  --exam-gold: #f59e0b;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --r: 10px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding-top:var(--safe-t);}
+.hdr{display:flex;align-items:center;gap:.9rem;padding:.85rem 1.2rem;}
+.logo{width:44px;height:44px;flex-shrink:0;background:linear-gradient(145deg,#1a0507,#2a0a10);border-radius:12px;border:1px solid var(--red-dim);display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px var(--red-glow),inset 0 1px 0 rgba(255,255,255,0.05);position:relative;}
+.logo::after{content:'';position:absolute;inset:0;border-radius:12px;background:radial-gradient(circle at 35% 30%,rgba(224,28,58,0.1),transparent 60%);pointer-events:none;}
+.app-name{font-family:var(--font-display);font-size:1.4rem;letter-spacing:.06em;line-height:1;color:var(--text);}
+.app-name span{color:var(--red);}
+.app-sub{font-family:var(--font-mono);font-size:.55rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-top:.2rem;}
+.phase-pill{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .7rem;border-radius:20px;background:rgba(224,28,58,0.12);color:var(--red);border:1px solid rgba(224,28,58,0.25);margin-left:auto;white-space:nowrap;flex-shrink:0;}
+
+/* INSTALL BANNER */
+#ib{position:fixed;bottom:calc(var(--safe-b) + 70px);left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--red);border-radius:40px;padding:.6rem 1.2rem;z-index:999;font-size:.75rem;color:var(--text);display:none;align-items:center;gap:.8rem;box-shadow:0 4px 24px rgba(224,28,58,0.25);white-space:nowrap;animation:su .35s ease;}
+#ib.show{display:flex;}
+@keyframes su{from{transform:translateX(-50%) translateY(16px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+#ib-btn{background:var(--red);color:#fff;border:none;padding:.3rem .9rem;border-radius:20px;font-family:var(--font-body);font-size:.72rem;font-weight:600;cursor:pointer;}
+#ib-x{background:none;border:none;color:var(--text3);cursor:pointer;font-size:.95rem;line-height:1;}
+
+/* COUNTDOWN */
+.cd{background:linear-gradient(160deg,#130204 0%,#1a0507 60%,#110203 100%);border-bottom:1px solid var(--border);padding:1.1rem 1.3rem;position:relative;overflow:hidden;}
+.cd::before{content:'';position:absolute;top:-50px;right:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(224,28,58,0.1),transparent 65%);pointer-events:none;}
+.cd::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red) 40%,var(--gold) 70%,transparent);}
+.cd-lbl{font-family:var(--font-mono);font-size:.57rem;color:var(--text3);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.45rem;}
+.cd-row{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;}
+.cd-num{font-family:var(--font-display);font-size:clamp(3rem,12vw,5rem);color:var(--red);line-height:.9;text-shadow:0 0 40px rgba(224,28,58,0.35);}
+.cd-unit{font-size:.78rem;color:var(--text2);font-weight:500;margin-bottom:.25rem;margin-left:.25rem;}
+.cd-sub{font-family:var(--font-mono);font-size:.58rem;color:var(--gold);margin-top:.2rem;letter-spacing:.05em;}
+.cd-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:.45rem;flex-shrink:0;}
+.cds{background:rgba(255,255,255,0.03);border:1px solid var(--border2);border-radius:8px;padding:.45rem .65rem;text-align:center;}
+.cds .v{font-family:var(--font-display);font-size:1.45rem;color:var(--text);line-height:1;}
+.cds .l{font-family:var(--font-mono);font-size:.5rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;display:block;margin-top:.12rem;}
+
+/* PROGRESS */
+.pbar{padding:.75rem 1.3rem;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.7rem;}
+.pb-lbl{font-family:var(--font-mono);font-size:.57rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;width:95px;flex-shrink:0;}
+.pb-track{flex:1;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.pb-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.pb-pct{font-family:var(--font-mono);font-size:.65rem;color:var(--gold);width:34px;text-align:right;flex-shrink:0;}
+
+/* FILTER */
+.fbar{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+.fbar::-webkit-scrollbar{display:none;}
+.ft{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.7rem 1rem;border:none;background:transparent;color:var(--text3);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;}
+.ft:hover{color:var(--text2);}
+.ft.active{color:var(--red);border-bottom-color:var(--red);}
+
+/* MAIN */
+.main{padding:1rem 1rem calc(var(--safe-b) + 70px);max-width:680px;margin:0 auto;}
+
+/* WEEK */
+.wg{margin-bottom:2rem;}
+.whd{display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem;padding-bottom:.45rem;border-bottom:1px solid var(--border);}
+.wn{font-family:var(--font-display);font-size:.88rem;color:var(--red);letter-spacing:.08em;}
+.wr{font-family:var(--font-mono);font-size:.55rem;color:var(--text3);}
+.wp{margin-left:auto;font-family:var(--font-mono);font-size:.57rem;color:var(--text3);}
+
+/* ITEM */
+.ci{display:grid;grid-template-columns:32px 60px 1fr auto;align-items:center;gap:.65rem;padding:.7rem .85rem;border:1px solid var(--border);border-radius:var(--r);margin-bottom:.35rem;background:var(--surface);cursor:pointer;transition:border-color .18s,background .18s,transform .1s;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;animation:fi .25s ease both;}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.ci:nth-child(2){animation-delay:.03s}.ci:nth-child(3){animation-delay:.06s}.ci:nth-child(4){animation-delay:.09s}.ci:nth-child(5){animation-delay:.12s}.ci:nth-child(6){animation-delay:.15s}
+.ci::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent;transition:background .18s;}
+.ci:active{transform:scale(.99);}
+.ci:hover:not(.off){border-color:var(--border2);}
+.ci.done{background:var(--green-bg);border-color:rgba(34,197,94,0.18);}
+.ci.done::before{background:var(--green);}
+.ci.done .ci-topic{text-decoration:line-through;color:var(--text3);}
+.ci.exam{background:rgba(245,158,11,0.04);border-color:rgba(245,158,11,0.18);cursor:default;}
+.ci.exam::before{background:var(--exam-gold);}
+.ci.off{background:var(--bg2);border-color:var(--border);opacity:.45;cursor:default;}
+.ci.tod{border-color:var(--red);background:var(--red-glow);}
+.ci.tod::before{background:var(--red);}
+
+/* checkbox */
+.cc{width:22px;height:22px;border:2px solid var(--border2);border-radius:6px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;background:var(--bg3);}
+.ci.done .cc{background:var(--green);border-color:var(--green);}
+.ci.exam .cc,.ci.off .cc{visibility:hidden;}
+.ck{display:none;}
+.ci.done .ck{display:block;}
+
+/* date */
+.cd2{font-family:var(--font-mono);font-size:.6rem;color:var(--text3);line-height:1.4;flex-shrink:0;}
+.cd2 small{font-size:.52rem;opacity:.65;}
+
+/* body */
+.cb{min-width:0;}
+.ci-topic{font-size:.83rem;font-weight:600;color:var(--text);line-height:1.3;transition:color .18s;}
+.ci-meta{font-size:.65rem;color:var(--text3);margin-top:.18rem;display:flex;flex-wrap:wrap;gap:.5rem;}
+
+/* tag */
+.ct{font-family:var(--font-mono);font-size:.53rem;padding:.15rem .45rem;border-radius:4px;letter-spacing:.07em;text-transform:uppercase;flex-shrink:0;align-self:flex-start;}
+.tt{background:rgba(224,28,58,0.1);color:var(--red);border:1px solid rgba(224,28,58,0.2);}
+.te{background:rgba(245,158,11,0.1);color:var(--exam-gold);border:1px solid rgba(245,158,11,0.2);}
+.to{background:var(--bg3);color:var(--text3);border:1px solid var(--border);}
+.td{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2);}
+.tnow{background:var(--red);color:#fff;border:1px solid var(--red);}
+
+/* filters */
+.main.fd .ci[data-type="topic"]:not(.done){display:none;}
+.main.fd .ci[data-type="exam"]{display:none;}
+.main.fd .ci[data-type="off"]{display:none;}
+.main.fp .ci.done{display:none;}
+.main.fp .ci[data-type="off"]{display:none;}
+.main.fe .ci:not([data-type="exam"]){display:none;}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(14,14,14,0.96);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;padding-bottom:var(--safe-b);z-index:50;}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:.22rem;padding:.6rem .5rem;background:none;border:none;color:var(--text3);cursor:pointer;font-family:var(--font-mono);font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;transition:color .18s;-webkit-tap-highlight-color:transparent;}
+.nb svg{width:20px;height:20px;}
+.nb.active{color:var(--red);}
+
+/* ABOUT */
+#tabAbout{display:none;padding:1.5rem 1rem calc(var(--safe-b) + 70px);}
+#tabAbout.vis{display:block;}
+.al{width:80px;height:80px;background:linear-gradient(145deg,#1a0507,#2a0a10);border-radius:20px;border:1px solid var(--red-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;box-shadow:0 0 30px rgba(224,28,58,0.18);}
+.at{font-family:var(--font-display);font-size:2rem;text-align:center;letter-spacing:.06em;margin-bottom:.25rem;}
+.at span{color:var(--red);}
+.as{font-family:var(--font-mono);font-size:.62rem;color:var(--text3);text-align:center;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.4rem;}
+.ac{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1.1rem;margin-bottom:.7rem;}
+.ac h3{font-size:.75rem;font-weight:700;color:var(--red);margin-bottom:.45rem;text-transform:uppercase;letter-spacing:.07em;}
+.ac p,.ac li{font-size:.78rem;color:var(--text2);line-height:1.65;}
+.ac ul{list-style:none;}
+.ac li::before{content:'→ ';color:var(--red);}
+</style>
+</head>
+<body>
+
+<div id="ib">
+  <span>📲 Install as App</span>
+  <button id="ib-btn">Install</button>
+  <button id="ib-x">✕</button>
+</div>
+
+<header>
+  <div class="hdr">
+    <div class="logo">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+        <!-- nurse cap -->
+        <path d="M5 10.5 Q13 4.5 21 10.5 L19.5 14.5 Q13 11.5 6.5 14.5 Z" fill="#e01c3a" opacity=".92"/>
+        <rect x="11.4" y="7.2" width="3.2" height="1.1" rx=".55" fill="#fff" opacity=".9"/>
+        <rect x="12.45" y="5.6" width="1.1" height="3.4" rx=".55" fill="#fff" opacity=".9"/>
+        <!-- stethoscope -->
+        <path d="M8.5 15.5 Q7.5 20.5 10.5 22.5 Q13 24 15.5 22.5 Q18.5 20.5 17.5 15.5" stroke="#d4902a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <circle cx="8.5" cy="15.5" r="1.15" fill="#d4902a"/>
+        <circle cx="17.5" cy="15.5" r="1.15" fill="#d4902a"/>
+        <circle cx="13" cy="23" r="1.9" fill="none" stroke="#d4902a" stroke-width="1.2"/>
+        <circle cx="13" cy="23" r=".6" fill="#d4902a"/>
+      </svg>
+    </div>
+    <div>
+      <div class="app-name">PNLE <span>2026</span></div>
+      <div class="app-sub">Top Rank · Dagupan Branch</div>
+    </div>
+    <div class="phase-pill">Refresher</div>
+  </div>
+</header>
+
+<div class="cd">
+  <div class="cd-lbl">Days until PNLE August 2026</div>
+  <div class="cd-row">
+    <div>
+      <div style="display:flex;align-items:flex-end">
+        <div class="cd-num" id="dL">—</div>
+        <div class="cd-unit">days</div>
+      </div>
+      <div class="cd-sub">est. August 8, 2026 — you got this! 🎓</div>
+    </div>
+    <div class="cd-stats">
+      <div class="cds"><div class="v" id="dc">0</div><span class="l">Covered</span></div>
+      <div class="cds"><div class="v" id="tc">0</div><span class="l">Topics</span></div>
+      <div class="cds"><div class="v" id="ec">0</div><span class="l">Exams</span></div>
+      <div class="cds"><div class="v" id="pc">0%</div><span class="l">Done</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="pbar">
+  <div class="pb-lbl">Review Progress</div>
+  <div class="pb-track"><div class="pb-fill" id="pf" style="width:0%"></div></div>
+  <div class="pb-pct" id="pp">0%</div>
+</div>
+
+<div class="fbar">
+  <button class="ft active" onclick="setF('all',this)">All</button>
+  <button class="ft" onclick="setF('pending',this)">Pending</button>
+  <button class="ft" onclick="setF('done',this)">Covered</button>
+  <button class="ft" onclick="setF('exams',this)">Exams</button>
+</div>
+
+<div class="main" id="mc">
+
+<!-- WEEK 1 -->
+<div class="wg">
+  <div class="whd"><div class="wn">Week 1</div><div class="wr">Mar 17–22, 2026</div><div class="wp" id="w1"></div></div>
+  <div class="ci" data-date="2026-03-17" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Mar 17<br><small>Tue</small></div><div class="cb"><div class="ci-topic">Orientation</div><div class="ci-meta"><span>9:00 AM–12:00 NN</span><span>TRA Staff</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-03-17" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Mar 17<br><small>Tue</small></div><div class="cb"><div class="ci-topic">Fundamentals of Nursing 1</div><div class="ci-meta"><span>12NN–6:00 PM</span><span>Mr. John Vincent Gasmin</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-03-18" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Mar 18<br><small>Wed</small></div><div class="cb"><div class="ci-topic">Diagnostic Exam</div><div class="ci-meta"><span>8:00 AM–12:00 NN</span><span>TRA Staff</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-03-18" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Mar 18<br><small>Wed</small></div><div class="cb"><div class="ci-topic">Normal OB</div><div class="ci-meta"><span>2:00 PM–8:00 PM</span><span>Ms. Tricia Carmona</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci exam" data-date="2026-03-19" data-type="exam"><div class="cc"></div><div class="cd2">Mar 19<br><small>Thu</small></div><div class="cb"><div class="ci-topic">Evaluative Exam</div><div class="ci-meta"><span>8:00 AM–5:00 PM</span><span>TRA Staff</span></div></div><div class="ct te">Exam</div></div>
+  <div class="ci off" data-date="2026-03-20" data-type="off"><div class="cc"></div><div class="cd2">Mar 20<br><small>Fri</small></div><div class="cb"><div class="ci-topic">Day Off</div></div><div class="ct to">Off</div></div>
+  <div class="ci off" data-date="2026-03-21" data-type="off"><div class="cc"></div><div class="cd2">Mar 21<br><small>Sat</small></div><div class="cb"><div class="ci-topic">Day Off</div></div><div class="ct to">Off</div></div>
+  <div class="ci off" data-date="2026-03-22" data-type="off"><div class="cc"></div><div class="cd2">Mar 22<br><small>Sun</small></div><div class="cb"><div class="ci-topic">Day Off</div></div><div class="ct to">Off</div></div>
+</div>
+
+<!-- WEEK 2 -->
+<div class="wg">
+  <div class="whd"><div class="wn">Week 2</div><div class="wr">Mar 23–29, 2026</div><div class="wp" id="w2"></div></div>
+  <div class="ci" data-date="2026-03-23" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Mar 23<br><small>Mon</small></div><div class="cb"><div class="ci-topic">Abnormal Pediatrics</div><div class="ci-meta"><span>7:00 AM–1:00 PM</span><span>Ms. Haydee Bacani</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-03-24" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Mar 24<br><small>Tue</small></div><div class="cb"><div class="ci-topic">Gastrointestinal Tract (GIT)</div><div class="ci-meta"><span>2:00 PM–8:00 PM</span><span>Mr. Keith Garino</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-03-25" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Mar 25<br><small>Wed</small></div><div class="cb"><div class="ci-topic">Research</div><div class="ci-meta"><span>7:00 AM–1:00 PM</span><span>Ms. Jaidee Rojas</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-03-25" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Mar 25<br><small>Wed</small></div><div class="cb"><div class="ci-topic">Leadership &amp; Management</div><div class="ci-meta"><span>2:00 PM–8:00 PM</span><span>Dra. Aleni Iray</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-03-26" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Mar 26<br><small>Thu</small></div><div class="cb"><div class="ci-topic">Communicable Disease</div><div class="ci-meta"><span>2:00 PM–8:00 PM</span><span>Dr. Kevin Fajardo</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci exam" data-date="2026-03-27" data-type="exam"><div class="cc"></div><div class="cd2">Mar 27<br><small>Fri</small></div><div class="cb"><div class="ci-topic">Evaluative Exam</div><div class="ci-meta"><span>8:00 AM–5:00 PM</span><span>TRA Staff</span></div></div><div class="ct te">Exam</div></div>
+  <div class="ci off" data-date="2026-03-28" data-type="off"><div class="cc"></div><div class="cd2">Mar 28<br><small>Sat</small></div><div class="cb"><div class="ci-topic">Day Off</div></div><div class="ct to">Off</div></div>
+  <div class="ci off" data-date="2026-03-29" data-type="off"><div class="cc"></div><div class="cd2">Mar 29<br><small>Sun</small></div><div class="cb"><div class="ci-topic">Day Off</div></div><div class="ct to">Off</div></div>
+</div>
+
+<!-- WEEK 3 -->
+<div class="wg">
+  <div class="whd"><div class="wn">Week 3</div><div class="wr">Mar 30 – Apr 5, 2026</div><div class="wp" id="w3"></div></div>
+  <div class="ci" data-date="2026-03-30" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Mar 30<br><small>Mon</small></div><div class="cb"><div class="ci-topic">Abnormal Psychiatry</div><div class="ci-meta"><span>7:00 AM–1:00 PM</span><span>Mr. Niño Sayson</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-03-31" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Mar 31<br><small>Tue</small></div><div class="cb"><div class="ci-topic">Normal Pediatrics</div><div class="ci-meta"><span>7:00 AM–1:00 PM</span><span>Mr. Mike Chavez</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-04-01" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Apr 1<br><small>Wed</small></div><div class="cb"><div class="ci-topic">Abnormal OB</div><div class="ci-meta"><span>7:00 AM–1:00 PM</span><span>Mr. Kenneth Arzadon</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci exam" data-date="2026-04-02" data-type="exam"><div class="cc"></div><div class="cd2">Apr 2<br><small>Thu</small></div><div class="cb"><div class="ci-topic">Evaluative Exam</div><div class="ci-meta"><span>8:00 AM–5:00 PM</span><span>TRA Staff</span></div></div><div class="ct te">Exam</div></div>
+  <div class="ci off" data-date="2026-04-03" data-type="off"><div class="cc"></div><div class="cd2">Apr 3<br><small>Fri</small></div><div class="cb"><div class="ci-topic">Off — Holy Week</div></div><div class="ct to">Off</div></div>
+  <div class="ci off" data-date="2026-04-04" data-type="off"><div class="cc"></div><div class="cd2">Apr 4<br><small>Sat</small></div><div class="cb"><div class="ci-topic">Off — Holy Week</div></div><div class="ct to">Off</div></div>
+  <div class="ci off" data-date="2026-04-05" data-type="off"><div class="cc"></div><div class="cd2">Apr 5<br><small>Sun</small></div><div class="cb"><div class="ci-topic">Day Off</div></div><div class="ct to">Off</div></div>
+</div>
+
+<!-- WEEK 4 -->
+<div class="wg">
+  <div class="whd"><div class="wn">Week 4</div><div class="wr">Apr 6–12, 2026</div><div class="wp" id="w4"></div></div>
+  <div class="ci" data-date="2026-04-06" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Apr 6<br><small>Mon</small></div><div class="cb"><div class="ci-topic">Fundamentals of Nursing 2</div><div class="ci-meta"><span>9:00 AM–4:00 PM</span><span>Mr. Jessie Daclis</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-04-07" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Apr 7<br><small>Tue</small></div><div class="cb"><div class="ci-topic">Respiratory / Hematology</div><div class="ci-meta"><span>7:00 AM–1:00 PM</span><span>Mr. Keith Garino</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-04-07" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Apr 7<br><small>Tue</small></div><div class="cb"><div class="ci-topic">Cardiology</div><div class="ci-meta"><span>2:00 PM–8:00 PM</span><span>Ms. Lorelie Pomentil</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-04-08" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Apr 8<br><small>Wed</small></div><div class="cb"><div class="ci-topic">Endocrinology</div><div class="ci-meta"><span>2:00 PM–8:00 PM</span><span>Mr. Mike Chavez</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-04-09" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Apr 9<br><small>Thu</small></div><div class="cb"><div class="ci-topic">Normal Psychiatry</div><div class="ci-meta"><span>7:00 AM–1:00 PM</span><span>Mr. Aaron Aranas</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-04-09" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Apr 9<br><small>Thu</small></div><div class="cb"><div class="ci-topic">Neurology</div><div class="ci-meta"><span>2:00 PM–8:00 PM</span><span>Dra. Elenita Arreglo</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci" data-date="2026-04-10" data-type="topic" onclick="tog(this)"><div class="cc"><svg class="ck" width="11" height="9" viewBox="0 0 11 9"><polyline points="1,4 4,8 10,1" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="cd2">Apr 10<br><small>Fri</small></div><div class="cb"><div class="ci-topic">Community Health Nursing</div><div class="ci-meta"><span>7:00 AM–1:00 PM</span><span>Mr. Aaron Aranas</span></div></div><div class="ct tt">Topic</div></div>
+  <div class="ci exam" data-date="2026-04-11" data-type="exam"><div class="cc"></div><div class="cd2">Apr 11<br><small>Sat</small></div><div class="cb"><div class="ci-topic">Evaluative Exam</div><div class="ci-meta"><span>8:00 AM–5:00 PM</span><span>TRA Staff</span></div></div><div class="ct te">Exam</div></div>
+  <div class="ci exam" data-date="2026-04-12" data-type="exam"><div class="cc"></div><div class="cd2">Apr 12<br><small>Sun</small></div><div class="cb"><div class="ci-topic">Brain Train Pitching</div><div class="ci-meta"><span>8:00 AM–10:00 AM</span><span>TRA Staff</span></div></div><div class="ct te">Special</div></div>
+</div>
+
+<!-- WEEK 5 -->
+<div class="wg">
+  <div class="whd"><div class="wn">Week 5</div><div class="wr">Apr 13–17, 2026</div><div class="wp" id="w5"></div></div>
+  <div class="ci exam" data-date="2026-04-13" data-type="exam"><div class="cc"></div><div class="cd2">Apr 13<br><small>Mon</small></div><div class="cb"><div class="ci-topic">Evaluative Exam</div><div class="ci-meta"><span>8:00 AM–5:00 PM</span><span>TRA Staff</span></div></div><div class="ct te">Exam</div></div>
+  <div class="ci off" data-date="2026-04-14" data-type="off"><div class="cc"></div><div class="cd2">Apr 14<br><small>Tue</small></div><div class="cb"><div class="ci-topic">Day Off</div></div><div class="ct to">Off</div></div>
+  <div class="ci off" data-date="2026-04-15" data-type="off"><div class="cc"></div><div class="cd2">Apr 15<br><small>Wed</small></div><div class="cb"><div class="ci-topic">Day Off</div></div><div class="ct to">Off</div></div>
+  <div class="ci off" data-date="2026-04-16" data-type="off"><div class="cc"></div><div class="cd2">Apr 16<br><small>Thu</small></div><div class="cb"><div class="ci-topic">Day Off</div></div><div class="ct to">Off</div></div>
+  <div class="ci off" data-date="2026-04-17" data-type="off"><div class="cc"></div><div class="cd2">Apr 17<br><small>Fri</small></div><div class="cb"><div class="ci-topic">End of Refresher Phase 🎉</div></div><div class="ct to">Off</div></div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ABOUT -->
+<div id="tabAbout">
+  <div class="al">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <path d="M9 20 Q24 9 39 20 L37 27 Q24 22 11 27 Z" fill="#e01c3a" opacity=".92"/>
+      <rect x="21.5" y="13.5" width="5" height="1.8" rx=".9" fill="#fff" opacity=".9"/>
+      <rect x="23.1" y="11" width="1.8" height="6" rx=".9" fill="#fff" opacity=".9"/>
+      <path d="M14 29 Q12 39 18 42 Q24 45 30 42 Q36 39 34 29" stroke="#d4902a" stroke-width="2.3" fill="none" stroke-linecap="round"/>
+      <circle cx="14" cy="29" r="2.2" fill="#d4902a"/>
+      <circle cx="34" cy="29" r="2.2" fill="#d4902a"/>
+      <circle cx="24" cy="43" r="3.3" fill="none" stroke="#d4902a" stroke-width="2"/>
+      <circle cx="24" cy="43" r="1.1" fill="#d4902a"/>
+    </svg>
+  </div>
+  <div class="at">PNLE <span>2026</span></div>
+  <div class="as">Top Rank Review Academy · Dagupan Branch</div>
+  <div class="ac"><h3>About</h3><p>Your personal review tracker for the Philippine Nurse Licensure Examination August 2026. Built from the Top Rank Refresher Phase schedule — with Comprehensive Phase and Final Coaching to follow!</p></div>
+  <div class="ac"><h3>How to Use</h3><ul><li>Tap any session to mark it covered</li><li>Progress saves automatically to your browser</li><li>Use the filters to focus on what matters</li><li>Today's session is highlighted in red</li></ul></div>
+  <div class="ac"><h3>Review Phases</h3><ul><li>Refresher Phase ✅ (Mar 17 – Apr 17, 2026)</li><li>Comprehensive Phase — coming soon</li><li>Final Coaching — coming soon</li></ul></div>
+  <div class="ac"><h3>Exam Date</h3><p>Estimated <strong style="color:var(--red)">August 8, 2026</strong>. Update if the official schedule is released. Future RN, you've got this! 💉</p></div>
+</div>
+
+<nav class="bnav">
+  <button class="nb active" id="nb1" onclick="showTab('cl')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1" ry="1"/><path d="M9 12h6M9 16h4"/></svg>
+    Checklist
+  </button>
+  <button class="nb" id="nb2" onclick="showTab('ab')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    About
+  </button>
+</nav>
+
+<script>
+const PNLE=new Date('2026-08-08T00:00:00'),SK='pnle_v3';
+const WKS=[
+  {id:'w1',d:['2026-03-17','2026-03-18','2026-03-19','2026-03-20','2026-03-21','2026-03-22']},
+  {id:'w2',d:['2026-03-23','2026-03-24','2026-03-25','2026-03-26','2026-03-27','2026-03-28','2026-03-29']},
+  {id:'w3',d:['2026-03-30','2026-03-31','2026-04-01','2026-04-02','2026-04-03','2026-04-04','2026-04-05']},
+  {id:'w4',d:['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10','2026-04-11','2026-04-12']},
+  {id:'w5',d:['2026-04-13','2026-04-14','2026-04-15','2026-04-16','2026-04-17']},
+];
+function ky(el){return el.dataset.date+'|'+el.querySelector('.ci-topic').textContent.trim();}
+function save(){try{localStorage.setItem(SK,JSON.stringify([...document.querySelectorAll('.ci.done')].map(ky)));}catch(e){}}
+function load(){try{const s=JSON.parse(localStorage.getItem(SK)||'[]');document.querySelectorAll('.ci[data-type="topic"]').forEach(e=>{if(s.includes(ky(e)))e.classList.add('done');});}catch(e){}}
+function tog(el){el.classList.toggle('done');upd();save();}
+function markToday(){
+  const t=new Date().toISOString().split('T')[0];
+  document.querySelectorAll('.ci').forEach(el=>{
+    if(el.dataset.date===t&&!el.classList.contains('off')&&!el.classList.contains('exam')){
+      el.classList.add('tod');
+      const tg=el.querySelector('.ct');
+      if(tg){tg.className='ct tnow';tg.textContent='Today';}
+    }
+  });
+}
+function upd(){
+  const all=document.querySelectorAll('.ci[data-type="topic"]');
+  const done=document.querySelectorAll('.ci[data-type="topic"].done');
+  const exams=document.querySelectorAll('.ci[data-type="exam"]');
+  const t=all.length,dn=done.length,p=t?Math.round(dn/t*100):0;
+  document.getElementById('dc').textContent=dn;
+  document.getElementById('tc').textContent=t;
+  document.getElementById('ec').textContent=exams.length;
+  document.getElementById('pc').textContent=p+'%';
+  document.getElementById('pf').style.width=p+'%';
+  document.getElementById('pp').textContent=p+'%';
+  WKS.forEach(w=>{
+    const wa=[...all].filter(e=>w.d.includes(e.dataset.date));
+    const wd=[...done].filter(e=>w.d.includes(e.dataset.date));
+    const el=document.getElementById(w.id);
+    if(el&&wa.length)el.textContent=wd.length+'/'+wa.length+' done';
+  });
+}
+function updCD(){document.getElementById('dL').textContent=Math.max(0,Math.ceil((PNLE-new Date())/86400000));}
+function setF(t,btn){
+  document.querySelectorAll('.ft').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  const m=document.getElementById('mc');m.className='main';
+  if(t==='done')m.classList.add('fd');else if(t==='pending')m.classList.add('fp');else if(t==='exams')m.classList.add('fe');
+}
+function showTab(t){
+  const cl=document.getElementById('mc'),fb=document.querySelector('.fbar'),ab=document.getElementById('tabAbout');
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  if(t==='cl'){cl.style.display='';fb.style.display='';ab.classList.remove('vis');document.getElementById('nb1').classList.add('active');}
+  else{cl.style.display='none';fb.style.display='none';ab.classList.add('vis');document.getElementById('nb2').classList.add('active');}
+}
+// PWA install
+let dp;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;document.getElementById('ib').classList.add('show');});
+document.getElementById('ib-btn').addEventListener('click',async()=>{if(dp){dp.prompt();await dp.userChoice;dp=null;}document.getElementById('ib').classList.remove('show');});
+document.getElementById('ib-x').addEventListener('click',()=>document.getElementById('ib').classList.remove('show'));
+// Init
+load();markToday();upd();updCD();setInterval(updCD,60000);
+</script>
+</body>
+</html>
